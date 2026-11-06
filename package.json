@@ -15,7 +15,9 @@
   },
   "scripts": {
     "test": "node --test",
-    "tools": "node scripts/tools.mjs"
+    "tools": "node scripts/tools.mjs",
+    "references": "node scripts/references.mjs",
+    "sync-app": "node scripts/sync-app.mjs"
   },
   "keywords": [
     "snapwidget",
