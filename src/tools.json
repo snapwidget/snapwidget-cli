@@ -1,0 +1,1141 @@
+[
+ {
+  "name": "get_account",
+  "title": "Get Account",
+  "description": "The user's SnapWidget plan, its limits (widgets, accounts per widget, services, layouts) and usage.widgets: the widgets that count toward the plan's widget limit (list_widgets also lists the others, such as review widgets). trial_ends_at: the end of a free Pro trial (an agent sign-up), else null; after it the Pro widgets stop until the user pays for a plan (get_upgrade_link gives the payment link).",
+  "inputSchema": {
+   "type": "object",
+   "properties": {}
+  },
+  "annotations": {
+   "title": "Get Account",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "get_upgrade_link",
+  "title": "Get Upgrade Link",
+  "description": "A link to the payment page of a paid plan, for the owner of the account. It needs no login and has the email filled in. After the free Pro trial of an agent sign-up there is no second trial: the first payment is on the day the trial ends, or at once when it has ended. Give the link to the user when they want to keep their Pro widgets, or when get_account shows that the trial ends soon. An account that pays already changes its plan on /settings/subscription.",
+  "inputSchema": {
+   "properties": {
+    "plan": {
+     "description": "liteplan6 ($8/month), liteplan6yearly ($80/year), proplan10 ($14/month, the default), proplan10yearly ($140/year), developerplan ($99/month) or developerplanyearly ($990/year).",
+     "enum": [
+      "liteplan6",
+      "liteplan6yearly",
+      "proplan10",
+      "proplan10yearly",
+      "developerplan",
+      "developerplanyearly"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "annotations": {
+   "title": "Get Upgrade Link",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "list_invoices",
+  "title": "List Invoices",
+  "description": "The user's invoices: date, amount, currency, whether it is paid, and a receipt link.",
+  "inputSchema": {
+   "type": "object",
+   "properties": {}
+  },
+  "annotations": {
+   "title": "List Invoices",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "list_accounts",
+  "title": "List Accounts",
+  "description": "The connected social accounts (sources): service, name, status (OK, or expired and in need of a reconnect) and the widgets that use each one.",
+  "inputSchema": {
+   "type": "object",
+   "properties": {}
+  },
+  "annotations": {
+   "title": "List Accounts",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "connect_account",
+  "title": "Connect Account",
+  "description": "Adds a social account to the user's SnapWidget account, for widgets to show its posts. A YouTube channel: send its link and it is added at once. Instagram, Facebook, TikTok or X: the answer is an approval link. Give it to the user: they, or the owner of the account, open it, sign in with the platform and click Allow (the platforms require this; no SnapWidget sign-in is needed). The link works once, for 24 hours; list_accounts then shows the account. To renew an expired account, use reconnect_account.",
+  "inputSchema": {
+   "properties": {
+    "service": {
+     "description": "The platform of the account.",
+     "enum": [
+      "youtube",
+      "instagram",
+      "facebook",
+      "tiktok",
+      "x"
+     ],
+     "type": "string"
+    },
+    "channel_url": {
+     "description": "YouTube only: the channel's link, for example https://www.youtube.com/@channel.",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "service"
+   ]
+  },
+  "annotations": {
+   "title": "Connect Account",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": true
+  }
+ },
+ {
+  "name": "reconnect_account",
+  "title": "Reconnect Account",
+  "description": "Renews an account that list_accounts shows as expired (or any Instagram, Facebook, TikTok or X account): the answer is an approval link. Give it to the user: they, or the owner of the account, open it, sign in with the platform and click Allow. All the account's widgets then use the new sign-in. The link works once, for 24 hours.",
+  "inputSchema": {
+   "properties": {
+    "account_id": {
+     "description": "The account's id (the id in list_accounts).",
+     "type": "integer"
+    }
+   },
+   "type": "object",
+   "required": [
+    "account_id"
+   ]
+  },
+  "annotations": {
+   "title": "Reconnect Account",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "remove_account",
+  "title": "Remove Account",
+  "description": "Removes a social account from the user's SnapWidget account. Its widgets show their next account; a widget with no other account shows no posts until it gets one. list_accounts shows the widgets that use the account: tell the user before you remove it. When those widgets had views in the last 7 days, it needs confirm: true; ask the user first.",
+  "inputSchema": {
+   "properties": {
+    "account_id": {
+     "description": "The account's id (the id in list_accounts).",
+     "type": "integer"
+    },
+    "confirm": {
+     "description": "True: remove it also when its widgets had views in the last 7 days.",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "required": [
+    "account_id"
+   ]
+  },
+  "annotations": {
+   "title": "Remove Account",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "list_widget_types",
+  "title": "List Widget Types",
+  "description": "The services and layouts that a widget can have, the plan that each needs, and the settings of each layout with their type and allowed values.",
+  "inputSchema": {
+   "type": "object",
+   "properties": {}
+  },
+  "annotations": {
+   "title": "List Widget Types",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "list_widgets",
+  "title": "List Widgets",
+  "description": "The user's widgets (social and review), newest first, with the install status and the views in the last 7 days (paid plans). 50 a page.",
+  "inputSchema": {
+   "properties": {
+    "page": {
+     "description": "The page, from 1.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "per_page": {
+     "description": "Widgets a page, 100 at most (50 when not given).",
+     "minimum": 1,
+     "maximum": 100,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "annotations": {
+   "title": "List Widgets",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "get_widget",
+  "title": "Get Widget",
+  "description": "One widget: its settings, accounts, embed code, install status and the sites where it shows. A review widget has reviews_shown: the reviews its embed shows (0: an empty widget).",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id"
+   ]
+  },
+  "annotations": {
+   "title": "Get Widget",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "get_embed_code",
+  "title": "Get Embed Code",
+  "description": "The embed code of a widget, with the steps to add it to WordPress, Wix, Shopify, Squarespace or a plain HTML page.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id"
+   ]
+  },
+  "annotations": {
+   "title": "Get Embed Code",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "get_widget_stats",
+  "title": "Get Widget Stats",
+  "description": "The Analytics of the user's widgets, as the Analytics page shows it (paid plans): views, clicks and visitors per day, the sites and countries that show the widgets, the devices, and the widgets with the most views. For one widget: the posts or reviews that visitors click most, and the Shoppable product clicks. Analytics counts Pro widgets and review widgets. visitors is the sum of each day's visitors. from and to: the first and the last day of the range. counted_from: null when every day of the range has counts; else {date, reason}, the first day with counts, and why the days before it have none (reason \"counting\": counting started that day; \"widget\": the widget was made that day). With days 365, each point of daily is a week (date: its first day), and its days field gives the number of days in it: the oldest week can have fewer than 7.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "One widget's id (the id in list_widgets). Leave it out for all the widgets.",
+     "type": "string"
+    },
+    "days": {
+     "description": "The last 7, 30 or 90 days, today included (30 when not given), or 365: the last 52 full weeks (364 days), one point a week.",
+     "enum": [
+      7,
+      30,
+      90,
+      365
+     ],
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "annotations": {
+   "title": "Get Widget Stats",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "create_widget",
+  "title": "Create Widget",
+  "description": "Makes a widget. A social widget: a layout and the user's accounts from list_accounts (the first account gives the widget its service and header; the others add their posts), or one of the user's hashtag campaigns. A review widget: kind \"review\", a name, a layout and review sources; it shows only the reviews that are not hidden or pending (the \"shown\" count in list_review_sources), and the answer's reviews_shown says how many it shows. The answer is the widget as get_widget gives it; change its settings with update_widget, then use get_embed_code to put it on a site. A new pro widget counts for the plan's widget limit.",
+  "inputSchema": {
+   "properties": {
+    "kind": {
+     "description": "\"social\" (posts of accounts or a campaign) or \"review\" (reviews). Not sent: social.",
+     "enum": [
+      "social",
+      "review"
+     ],
+     "type": "string"
+    },
+    "layout": {
+     "description": "The layout: a social one from list_widget_types (for example grid, slideshow, board, feed, scrolling, popup), or a review one (wall, carousel, marquee, list, badge, avatars).",
+     "type": "string"
+    },
+    "accounts": {
+     "description": "Social widget: the account ids from list_accounts, in order. The first gives the widget its service; at most the plan's accounts per widget (get_account).",
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "campaign_id": {
+     "description": "Social widget: one of the user's campaigns (list_campaigns) in place of accounts. Instagram, Pro plans.",
+     "type": "integer"
+    },
+    "name": {
+     "description": "The widget's name in the Widgets list (a review widget needs it).",
+     "type": "string"
+    },
+    "source_ids": {
+     "description": "Review widget: the review source ids from list_review_sources. Not sent: all the user's sources.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object",
+   "required": [
+    "layout"
+   ]
+  },
+  "annotations": {
+   "title": "Create Widget",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "update_widget",
+  "title": "Update Widget",
+  "description": "Changes a widget; send only what changes. A refused call changes nothing. A social widget: its name, layout, settings (the names in get_widget's settings; list_widget_types gives each setting's allowed values), its accounts (all of them, in order: the first, of the widget's service, gives the header) and its campaign (for the \"hashtag-campaign\" filter; a widget that leaves its campaign needs its accounts in the same call). A review widget: its name, layout, settings and review sources. The site shows a change within a few minutes. embed_code_changed true (for example a new size of a widget with a fixed width and height) on a widget that is already on a site: give the user the new embed_code and the steps of get_embed_code to replace the code on the site.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    },
+    "layout": {
+     "description": "A new layout of the same kind. A social widget keeps its service and plan.",
+     "type": "string"
+    },
+    "settings": {
+     "description": "The settings to change, as {name: value}, for example {\"layoutx\": 4, \"layouty\": 2, \"name\": \"Home page feed\"}.",
+     "type": "object"
+    },
+    "accounts": {
+     "description": "Social widget: all its account ids from list_accounts, in order, in place of the current ones.",
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "campaign_id": {
+     "description": "Social widget: one of the user's campaigns (list_campaigns), with the setting filter_type \"hashtag-campaign\".",
+     "type": "integer"
+    },
+    "name": {
+     "description": "The widget's name in the Widgets list.",
+     "type": "string"
+    },
+    "source_ids": {
+     "description": "Review widget: all its review source ids from list_review_sources, in place of the current ones.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id"
+   ]
+  },
+  "annotations": {
+   "title": "Update Widget",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false,
+   "idempotentHint": true
+  }
+ },
+ {
+  "name": "copy_widget",
+  "title": "Copy Widget",
+  "description": "Copies a widget with its settings and its accounts or review sources. The copy is a new widget with its own embed code, and a pro copy counts for the plan's widget limit.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id"
+   ]
+  },
+  "annotations": {
+   "title": "Copy Widget",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "delete_widget",
+  "title": "Delete Widget",
+  "description": "Deletes a widget. A site that still has its code shows an empty widget. A widget with views in the last 7 days needs confirm: true; ask the user first. The widget's accounts and review sources stay.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    },
+    "confirm": {
+     "description": "True: delete it also when a site showed it in the last 7 days.",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id"
+   ]
+  },
+  "annotations": {
+   "title": "Delete Widget",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "preview_widget",
+  "title": "Preview Widget",
+  "description": "Shows the live widget in the chat, as it shows on a site. In an app without MCP Apps, the answer has the address of the widget page to open.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id"
+   ]
+  },
+  "annotations": {
+   "title": "Preview Widget",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "list_widget_posts",
+  "title": "List Widget Posts",
+  "description": "One page (30) of the posts that a widget shows, in its order: image, caption, date, link, alt text and product tags. For the next page, send next_cursor as cursor. Not for feed widgets.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    },
+    "cursor": {
+     "description": "The next_cursor of the page before.",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id"
+   ]
+  },
+  "annotations": {
+   "title": "List Widget Posts",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "set_product_tags",
+  "title": "Set Product Tags",
+  "description": "Sets the product tags (Shoppable links) of one post, in place of its old tags; an empty list removes them. A tag has a url (http or https), a description (the product name) and a point x, y in px on the photo shown 320 px wide. With image_clickable true, a click on the photo opens the first tag's link. At most 20 tags. Paid plans, Pro widgets that are not feeds.",
+  "inputSchema": {
+   "properties": {
+    "widget_id": {
+     "description": "The widget's id (the id in list_widgets).",
+     "type": "string"
+    },
+    "post_id": {
+     "description": "The post's id (the id in list_widget_posts).",
+     "type": "string"
+    },
+    "tags": {
+     "description": "The tags of the post. An empty list removes them.",
+     "maxItems": 20,
+     "items": {
+      "properties": {
+       "url": {
+        "description": "The product link: http or https.",
+        "type": "string"
+       },
+       "description": {
+        "description": "The product name.",
+        "type": "string"
+       },
+       "x": {
+        "description": "Px from the left of the photo shown 320 px wide.",
+        "minimum": 0,
+        "maximum": 320,
+        "type": "number"
+       },
+       "y": {
+        "description": "Px from the top of the photo shown 320 px wide.",
+        "minimum": 0,
+        "maximum": 1000,
+        "type": "number"
+       }
+      },
+      "type": "object",
+      "required": [
+       "url",
+       "x",
+       "y"
+      ]
+     },
+     "type": "array"
+    },
+    "image_clickable": {
+     "description": "True: a click on the photo opens the first tag's link. Not sent: it stays as it is.",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "required": [
+    "widget_id",
+    "post_id",
+    "tags"
+   ]
+  },
+  "annotations": {
+   "title": "Set Product Tags",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false,
+   "idempotentHint": true
+  }
+ },
+ {
+  "name": "find_google_business",
+  "title": "Find Google Business",
+  "description": "Finds a business on Google Maps by its name and city, for add_review_source with type google. Paid plans.",
+  "inputSchema": {
+   "properties": {
+    "query": {
+     "description": "The business name and its city, for example: Blue Bottle Coffee Oakland.",
+     "type": "string"
+    },
+    "country": {
+     "description": "The business's country as a 2-letter code, for example JP. Send it: the request comes from the AI assistant's servers, not from the user's country.",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "query"
+   ]
+  },
+  "annotations": {
+   "title": "Find Google Business",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": true
+  }
+ },
+ {
+  "name": "add_review_source",
+  "title": "Add Review Source",
+  "description": "Adds a review source. type google: name and place_id from find_google_business. type g2: url of the G2 product page. type manual: name; add its reviews with add_review or import_reviews. Google and G2 sources start to sync their reviews. Paid plans.",
+  "inputSchema": {
+   "properties": {
+    "type": {
+     "description": "google, g2 or manual.",
+     "enum": [
+      "manual",
+      "g2",
+      "google"
+     ],
+     "type": "string"
+    },
+    "name": {
+     "description": "The source's name (google and manual).",
+     "type": "string"
+    },
+    "place_id": {
+     "description": "The place_id from find_google_business (google).",
+     "type": "string"
+    },
+    "url": {
+     "description": "The link of the G2 product page (g2).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "type"
+   ]
+  },
+  "annotations": {
+   "title": "Add Review Source",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": true
+  }
+ },
+ {
+  "name": "list_review_sources",
+  "title": "List Review Sources",
+  "description": "The review sources with their review counts (reviews: all; shown: not hidden and not pending, the ones a widget can show), sync state and the widgets that show them.",
+  "inputSchema": {
+   "type": "object",
+   "properties": {}
+  },
+  "annotations": {
+   "title": "List Review Sources",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "get_review_source",
+  "title": "Get Review Source",
+  "description": "One review source and one page of its reviews, with the review ids for update_review and delete_review. 50 a page.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources).",
+     "type": "string"
+    },
+    "page": {
+     "description": "The page, from 1.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "per_page": {
+     "description": "Reviews a page, 100 at most (50 when not given).",
+     "minimum": 1,
+     "maximum": 100,
+     "type": "integer"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id"
+   ]
+  },
+  "annotations": {
+   "title": "Get Review Source",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "update_review_source",
+  "title": "Update Review Source",
+  "description": "Turns auto approval on or off for a Google or G2 source. On: new reviews from a sync show at once. Off: they wait for approval.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources).",
+     "type": "string"
+    },
+    "auto_approve": {
+     "description": "True: new reviews show at once.",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id",
+    "auto_approve"
+   ]
+  },
+  "annotations": {
+   "title": "Update Review Source",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false,
+   "idempotentHint": true
+  }
+ },
+ {
+  "name": "sync_review_source",
+  "title": "Sync Review Source",
+  "description": "Gets the new reviews of a Google or G2 source. They show in a minute or two.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id"
+   ]
+  },
+  "annotations": {
+   "title": "Sync Review Source",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": true
+  }
+ },
+ {
+  "name": "approve_pending_reviews",
+  "title": "Approve Pending Reviews",
+  "description": "Approves every review of a source that waits for approval, so they show on the widgets at once. To read the reviews first, use get_review_source.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id"
+   ]
+  },
+  "annotations": {
+   "title": "Approve Pending Reviews",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": false,
+   "idempotentHint": true
+  }
+ },
+ {
+  "name": "import_reviews",
+  "title": "Import Reviews",
+  "description": "Imports reviews into a manual source from the text of a CSV file with a header row (2 MB at most). Reviews that are there already are skipped.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources) (a manual source).",
+     "type": "string"
+    },
+    "csv": {
+     "description": "The text of the CSV file, with a header row (for example name, review, rating, date).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id",
+    "csv"
+   ]
+  },
+  "annotations": {
+   "title": "Import Reviews",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "add_review",
+  "title": "Add Review",
+  "description": "Adds a review by hand (a testimonial) to a manual source.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources) (a manual source).",
+     "type": "string"
+    },
+    "author_name": {
+     "description": "The name of the person.",
+     "type": "string"
+    },
+    "body": {
+     "description": "The review text, 10,000 characters at most.",
+     "type": "string"
+    },
+    "author_title": {
+     "description": "Their job title.",
+     "type": "string"
+    },
+    "author_company": {
+     "description": "Their company.",
+     "type": "string"
+    },
+    "author_avatar": {
+     "description": "A link to their photo (http or https).",
+     "type": "string"
+    },
+    "author_url": {
+     "description": "A link to their profile.",
+     "type": "string"
+    },
+    "rating": {
+     "description": "The stars, 1 to 5.",
+     "minimum": 1,
+     "maximum": 5,
+     "type": "number"
+    },
+    "title": {
+     "description": "A title for the review.",
+     "type": "string"
+    },
+    "published_at": {
+     "description": "The date of the review (YYYY-MM-DD).",
+     "type": "string"
+    },
+    "url": {
+     "description": "A link to the review.",
+     "type": "string"
+    },
+    "video_url": {
+     "description": "A link to a video review.",
+     "type": "string"
+    },
+    "platform": {
+     "description": "Where the review comes from, for its icon.",
+     "enum": [
+      "g2",
+      "google",
+      "capterra",
+      "trustpilot",
+      "producthunt",
+      "x",
+      "linkedin",
+      "facebook"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id",
+    "author_name",
+    "body"
+   ]
+  },
+  "annotations": {
+   "title": "Add Review",
+   "readOnlyHint": false,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "update_review",
+  "title": "Update Review",
+  "description": "Changes a review. Send one of these: all the fields of a review of a manual source (author_name and body, and the others as add_review); highlights (phrases of the text to show in bold, [] to remove them); approved: true (shows a review that waits for approval); or hidden (true hides it from the widgets, false shows it).",
+  "inputSchema": {
+   "properties": {
+    "review_id": {
+     "description": "The review's id (the id in get_review_source).",
+     "type": "string"
+    },
+    "author_name": {
+     "description": "The name of the person (manual source).",
+     "type": "string"
+    },
+    "body": {
+     "description": "The review text (manual source).",
+     "type": "string"
+    },
+    "author_title": {
+     "description": "Their job title.",
+     "type": "string"
+    },
+    "author_company": {
+     "description": "Their company.",
+     "type": "string"
+    },
+    "author_avatar": {
+     "description": "A link to their photo.",
+     "type": "string"
+    },
+    "author_url": {
+     "description": "A link to their profile.",
+     "type": "string"
+    },
+    "rating": {
+     "description": "The stars, 1 to 5.",
+     "minimum": 1,
+     "maximum": 5,
+     "type": "number"
+    },
+    "title": {
+     "description": "A title.",
+     "type": "string"
+    },
+    "published_at": {
+     "description": "The date (YYYY-MM-DD).",
+     "type": "string"
+    },
+    "url": {
+     "description": "A link to the review.",
+     "type": "string"
+    },
+    "video_url": {
+     "description": "A link to a video review.",
+     "type": "string"
+    },
+    "platform": {
+     "description": "Where the review comes from.",
+     "enum": [
+      "g2",
+      "google",
+      "capterra",
+      "trustpilot",
+      "producthunt",
+      "x",
+      "linkedin",
+      "facebook"
+     ],
+     "type": "string"
+    },
+    "highlights": {
+     "description": "Phrases of the text to show in bold.",
+     "maxItems": 30,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "approved": {
+     "description": "True: the review shows (it waited for approval).",
+     "type": "boolean"
+    },
+    "hidden": {
+     "description": "True: hidden from the widgets. False: shown.",
+     "type": "boolean"
+    }
+   },
+   "type": "object",
+   "required": [
+    "review_id"
+   ]
+  },
+  "annotations": {
+   "title": "Update Review",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false,
+   "idempotentHint": true
+  }
+ },
+ {
+  "name": "delete_review",
+  "title": "Delete Review",
+  "description": "Deletes a review of a manual source.",
+  "inputSchema": {
+   "properties": {
+    "review_id": {
+     "description": "The review's id (the id in get_review_source).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "review_id"
+   ]
+  },
+  "annotations": {
+   "title": "Delete Review",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "remove_review_source",
+  "title": "Remove Review Source",
+  "description": "Removes a review source and all its reviews. The review widgets that show it no longer show those reviews.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id"
+   ]
+  },
+  "annotations": {
+   "title": "Remove Review Source",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "list_campaigns",
+  "title": "List Campaigns",
+  "description": "The user's Instagram hashtag campaigns with their join links.",
+  "inputSchema": {
+   "type": "object",
+   "properties": {}
+  },
+  "annotations": {
+   "title": "List Campaigns",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "get_campaign",
+  "title": "Get Campaign",
+  "description": "One hashtag campaign, its join link and the people who joined it, with their ids for remove_campaign_participant.",
+  "inputSchema": {
+   "properties": {
+    "campaign_id": {
+     "description": "The campaign's id (the id in list_campaigns).",
+     "type": "integer"
+    }
+   },
+   "type": "object",
+   "required": [
+    "campaign_id"
+   ]
+  },
+  "annotations": {
+   "title": "Get Campaign",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "save_campaign",
+  "title": "Save Campaign",
+  "description": "Creates an Instagram hashtag campaign, or changes one when campaign_id is given (then send only the fields to change). People join with the join link in the answer, and the campaign's widgets show their posts with the hashtag.",
+  "inputSchema": {
+   "properties": {
+    "campaign_id": {
+     "description": "The campaign's id (the id in list_campaigns), to change a campaign. Not sent: a new campaign.",
+     "type": "integer"
+    },
+    "name": {
+     "description": "The campaign name, unique among the user's campaigns (a new campaign needs it).",
+     "type": "string"
+    },
+    "description": {
+     "description": "A short text for the join page (a new campaign needs it).",
+     "type": "string"
+    },
+    "hashtag": {
+     "description": "The hashtag of the posts to show, without #.",
+     "type": "string"
+    },
+    "campaign_signup_title": {
+     "description": "The title of the join page.",
+     "type": "string"
+    },
+    "campaign_signup_description": {
+     "description": "The text of the join page.",
+     "type": "string"
+    },
+    "campaign_signup_image_url": {
+     "description": "A link to the image of the join page.",
+     "type": "string"
+    },
+    "campaign_signup_color": {
+     "description": "The color of the join page, for example #1f6feb.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "annotations": {
+   "title": "Save Campaign",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "delete_campaign",
+  "title": "Delete Campaign",
+  "description": "Deletes a hashtag campaign and the list of the people who joined it. Not while a widget shows it.",
+  "inputSchema": {
+   "properties": {
+    "campaign_id": {
+     "description": "The campaign's id (the id in list_campaigns).",
+     "type": "integer"
+    }
+   },
+   "type": "object",
+   "required": [
+    "campaign_id"
+   ]
+  },
+  "annotations": {
+   "title": "Delete Campaign",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  }
+ },
+ {
+  "name": "remove_campaign_participant",
+  "title": "Remove Campaign Participant",
+  "description": "Removes a person from a hashtag campaign: the campaign's widgets no longer show their posts.",
+  "inputSchema": {
+   "properties": {
+    "campaign_id": {
+     "description": "The campaign's id (the id in list_campaigns).",
+     "type": "integer"
+    },
+    "participant_id": {
+     "description": "The person's id (the id in get_campaign).",
+     "type": "integer"
+    }
+   },
+   "type": "object",
+   "required": [
+    "campaign_id",
+    "participant_id"
+   ]
+  },
+  "annotations": {
+   "title": "Remove Campaign Participant",
+   "readOnlyHint": false,
+   "destructiveHint": true,
+   "openWorldHint": false
+  }
+ }
+]

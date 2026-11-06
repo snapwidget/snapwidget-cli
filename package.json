@@ -1,0 +1,38 @@
+{
+  "name": "snapwidget",
+  "version": "0.1.0",
+  "description": "Ask your AI agent to add your Instagram feed or your Google reviews to your website. The SnapWidget CLI for Claude Code, Codex, Cursor and other agents.",
+  "type": "module",
+  "bin": {
+    "snapwidget": "bin/snapwidget.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "tools": "node scripts/tools.mjs"
+  },
+  "keywords": [
+    "snapwidget",
+    "instagram-feed",
+    "social-media-widget",
+    "reviews-widget",
+    "embed",
+    "mcp",
+    "ai-agent",
+    "cli"
+  ],
+  "homepage": "https://snapwidget.com/ai-agents",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snapwidget/snapwidget-cli.git"
+  },
+  "bugs": "https://github.com/snapwidget/snapwidget-cli/issues",
+  "author": "SnapWidget (https://snapwidget.com)",
+  "license": "MIT"
+}
