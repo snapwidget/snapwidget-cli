@@ -377,7 +377,7 @@
    "title": "Update Widget",
    "readOnlyHint": false,
    "destructiveHint": true,
-   "openWorldHint": false,
+   "openWorldHint": true,
    "idempotentHint": true
   }
  },
@@ -546,8 +546,31 @@
    "title": "Set Product Tags",
    "readOnlyHint": false,
    "destructiveHint": true,
-   "openWorldHint": false,
+   "openWorldHint": true,
    "idempotentHint": true
+  }
+ },
+ {
+  "name": "search_products",
+  "title": "Search Products",
+  "description": "Finds products in the product feeds that the user added on the Shoppable page, by words of the product name or link: url, name, image, price, currency and available (false: sold out). At most 20. Use a product's url and name as the url and description of a tag in set_product_tags. Paid plans.",
+  "inputSchema": {
+   "properties": {
+    "query": {
+     "description": "Words of the product name or link, for example \"linen shirt\".",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "query"
+   ]
+  },
+  "annotations": {
+   "title": "Search Products",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
   }
  },
  {
@@ -667,6 +690,29 @@
   }
  },
  {
+  "name": "get_request_link",
+  "title": "Get Request Link",
+  "description": "The link that asks customers for a review, and its QR code image. A \"Your reviews\" source gives its testimonial form, and open says whether the owner turned the form on. A Google source gives Google's page for writing a review.",
+  "inputSchema": {
+   "properties": {
+    "source_id": {
+     "description": "The source's id (the id in list_review_sources).",
+     "type": "string"
+    }
+   },
+   "type": "object",
+   "required": [
+    "source_id"
+   ]
+  },
+  "annotations": {
+   "title": "Get Request Link",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "openWorldHint": false
+  }
+ },
+ {
   "name": "update_review_source",
   "title": "Update Review Source",
   "description": "Turns auto approval on or off for a Google or G2 source. On: new reviews from a sync show at once. Off: they wait for approval.",
@@ -738,7 +784,7 @@
    "title": "Approve Pending Reviews",
    "readOnlyHint": false,
    "destructiveHint": false,
-   "openWorldHint": false,
+   "openWorldHint": true,
    "idempotentHint": true
   }
  },
@@ -951,7 +997,7 @@
    "title": "Update Review",
    "readOnlyHint": false,
    "destructiveHint": true,
-   "openWorldHint": false,
+   "openWorldHint": true,
    "idempotentHint": true
   }
  },
